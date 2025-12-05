@@ -2,6 +2,7 @@ import express, { Request, Response } from "express";
 import { initDB } from "./database/db";
 import { authRoute } from "./modules/auth/auth.route";
 import { userRoute } from "./modules/user/user.route";
+import { config } from "./config";
 
 // Initialize Express app
 const app = express();
@@ -27,6 +28,6 @@ app.get("/", (req: Request, res: Response) => {
 });
 
 // Start the server
-app.listen(5000, () => {
-  console.log("Server is running on port 5000");
+app.listen(config.port, () => {
+  console.log(`Server is running on port ${config.port}`);
 });
