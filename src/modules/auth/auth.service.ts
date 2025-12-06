@@ -12,6 +12,9 @@ interface SignupPayload {
 
 const signupUserIntoDB = async (payload: SignupPayload) => {
   const { name, email, password, phone, role } = payload;
+  if (password.length < 6) {
+    throw new Error("Password must be at least 6 characters long");
+  }
   const normalizedEmail = email.toLowerCase().trim();
   const hashedPassword = await bcrypt.hash(password, 10);
   const newRole = role ? role : "customer";
