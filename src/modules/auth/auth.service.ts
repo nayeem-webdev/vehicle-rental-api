@@ -2,13 +2,22 @@ import jwt from "jsonwebtoken";
 import bcrypt from "bcrypt";
 import { pool } from "../../database/db";
 
-const signupUserIntoDB = async (payload: Record<string, unknown>) => {
+interface SignupPayload {
+  name: string;
+  email: string;
+  password: string;
+  phone: string;
+  role: string;
+}
+
+const signupUserIntoDB = async (payload: SignupPayload) => {
   const { name, email, password, phone, role } = payload;
-  const hashedPassword = await bcrypt.hash(password as string, 10);
+  const normalizedEmail = email.toLowerCase().trim();
+  const hashedPassword = await bcrypt.hash(password, 10);
   const newRole = role ? role : "customer";
   const result = await pool.query(
     `INSERT INTO users (name, email, password, phone, role) VALUES($1,$2,$3,$4,$5) RETURNING id, name, email, phone, role`,
-    [name, email, hashedPassword, phone, newRole]
+    [name, normalizedEmail, hashedPassword, phone, newRole]
   );
   return result;
 };

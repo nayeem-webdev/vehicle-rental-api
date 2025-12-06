@@ -16,9 +16,6 @@ initDB();
 // signup new user
 app.use("/api/v1/auth", authRoute);
 
-// sign in user
-app.use("/api/v1/auth", authRoute);
-
 // get all users
 app.use("/api/v1/users", userRoute);
 
