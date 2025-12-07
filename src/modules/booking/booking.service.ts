@@ -78,6 +78,18 @@ const createBookingIntoDB = async (payload: Record<string, unknown>) => {
   }
 };
 
+const getAllBookingFromDB = async (role: string, id: number) => {
+  if (role === "admin") {
+    const result = await pool.query(`SELECT * FROM bookings`);
+    return result;
+  }
+  const result = await pool.query(
+    `SELECT * FROM bookings WHERE customer_id=$1`,
+    [id]
+  );
+  return result;
+};
 export const bookingServices = {
   createBookingIntoDB,
+  getAllBookingFromDB,
 };
