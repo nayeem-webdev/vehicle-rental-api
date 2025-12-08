@@ -14,7 +14,7 @@ const hasBooking = () => {
         console.log(id);
 
         const result = await pool.query(
-          `SELECT COUNT(*) AS count FROM bookings WHERE customer_id = $1`,
+          `SELECT COUNT(*) AS count FROM bookings WHERE customer_id = $1 AND status = 'active'`,
           [id]
         );
 
@@ -22,7 +22,7 @@ const hasBooking = () => {
 
         if (bookingCount > 0) {
           return res.status(400).json({
-            error: "Cannot delete user. User has existing bookings.",
+            error: "Cannot delete user. User has active bookings.",
           });
         }
       }
@@ -33,7 +33,7 @@ const hasBooking = () => {
         const id = req.params.vehicleId;
 
         const result = await pool.query(
-          `SELECT COUNT(*) AS count FROM bookings WHERE vehicle_id = $1`,
+          `SELECT COUNT(*) AS count FROM bookings WHERE vehicle_id = $1 AND status = 'active'`,
           [id]
         );
 
@@ -41,7 +41,7 @@ const hasBooking = () => {
 
         if (bookingCount > 0) {
           return res.status(400).json({
-            error: "Cannot delete vehicle. Vehicle has existing bookings.",
+            error: "Cannot delete vehicle. Vehicle has active bookings.",
           });
         }
       }
