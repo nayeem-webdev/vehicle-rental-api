@@ -1,8 +1,8 @@
 import { Router } from "express";
 import { userController } from "./user.controller.ts";
 import isAdmin from "../../middleware/isAdmin.js";
-import hasBooking from "../../middleware/hasBooking.js";
 import isAdminOrIsOwner from "../../middleware/isAdminOrIsOwner.js";
+import hasBooking from "../../middleware/hasBooking.js";
 
 const router = Router();
 

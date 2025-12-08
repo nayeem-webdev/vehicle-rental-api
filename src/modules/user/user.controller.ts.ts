@@ -19,6 +19,7 @@ const getAllUsers = async (req: Request, res: Response) => {
 
 // Update user controller
 const updateUser = async (req: Request, res: Response) => {
+  console.log("hit");
   const userId = req.params.userId;
   try {
     if (!userId) {

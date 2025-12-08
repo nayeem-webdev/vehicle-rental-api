@@ -4,7 +4,7 @@ import { config } from "../config";
 
 const isAdminOrCustomer = () => {
   return async (req: Request, res: Response, next: NextFunction) => {
-    const id = req.body;
+    const id = req.body.customer_id;
     const token = req.headers.authorization?.split(" ")[1];
 
     if (!token) {
@@ -12,7 +12,7 @@ const isAdminOrCustomer = () => {
     }
     try {
       const decoded = jwt.verify(token, config.jwt.secret) as JwtPayload;
-      if (id === decoded.id || decoded.role === "admin") {
+      if (Number(id) === Number(decoded.id) || decoded.role === "admin") {
         next();
       } else {
         return res.status(403).json({

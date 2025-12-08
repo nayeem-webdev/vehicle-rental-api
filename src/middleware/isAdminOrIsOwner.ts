@@ -12,7 +12,7 @@ const isAdminOrIsOwner = () => {
     }
     try {
       const decoded = jwt.verify(token, config.jwt.secret) as JwtPayload;
-      if (id === decoded.id || decoded.role === "admin") {
+      if (Number(id) === Number(decoded.id) || decoded.role === "admin") {
         next();
       } else {
         return res.status(403).json({
