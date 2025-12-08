@@ -20,7 +20,7 @@ const createBookingIntoDB = async (payload: Record<string, unknown>) => {
       throw new Error("Vehicle is not available for booking");
     }
 
-    // Calculate difference in milliseconds
+    // Calculate Days
     const timeDiffMs =
       new Date(rent_end_date as string).getTime() -
       new Date(rent_start_date as string).getTime();

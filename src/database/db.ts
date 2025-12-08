@@ -5,7 +5,7 @@ export const pool = new Pool({
   connectionString: config.db.dbString,
 });
 
-// Function to initialize the database
+// Function to initialize the DB
 export const initDB = async () => {
   await pool.query(`
     CREATE TABLE IF NOT EXISTS users(

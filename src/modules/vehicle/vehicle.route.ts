@@ -9,7 +9,6 @@ const router = Router();
 router.post("/", isAdmin(), vehicleController.addVehicle);
 router.put("/:vehicleId", isAdmin(), vehicleController.updateVehicle);
 
-//!! Do not Forget to write hasBooking logic
 router.delete(
   "/:vehicleId",
   isAdmin(),

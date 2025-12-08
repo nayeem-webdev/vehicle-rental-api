@@ -6,7 +6,6 @@ const hasBooking = () => {
     console.log("middlewear hit");
 
     try {
-      // Accessing the third segment of the path (e.g., /api/v1/users/...)
       const path = req.baseUrl.split("/")[3];
 
       if (path === "users") {
@@ -19,7 +18,6 @@ const hasBooking = () => {
           [id]
         );
 
-        // 💡 CORRECTION: The count is now correctly available at result.rows[0].count
         const bookingCount = parseInt(result.rows[0].count, 10);
 
         if (bookingCount > 0) {
@@ -29,20 +27,16 @@ const hasBooking = () => {
         }
       }
 
-      // ---
-
       if (path === "vehicles") {
         console.log("vehicle condition hit");
 
         const id = req.params.vehicleId;
 
-        // 💡 CORRECTION: Use COUNT(*) to get the number of records
         const result = await pool.query(
           `SELECT COUNT(*) AS count FROM bookings WHERE vehicle_id = $1`,
           [id]
         );
 
-        // 💡 CORRECTION: The count is now correctly available at result.rows[0].count
         const bookingCount = parseInt(result.rows[0].count, 10);
 
         if (bookingCount > 0) {
@@ -52,7 +46,6 @@ const hasBooking = () => {
         }
       }
 
-      // If no bookings are found for the given entity, continue
       next();
     } catch (error) {
       console.error("Error checking bookings:", error);
