@@ -25,11 +25,15 @@ const getAllBookings = async (req: Request, res: Response) => {
   }
   const decoded = jwt.verify(token, config.jwt.secret) as JwtPayload;
   const { role, id } = decoded;
+  const customMessage =
+    role === "admin"
+      ? "Bookings retrieved successfully"
+      : "Your bookings retrieved successfully";
   try {
     const result = await bookingServices.getAllBookingFromDB(role, id);
     return res.status(200).json({
       success: true,
-      message: "Bookings retrieved successfully",
+      message: customMessage,
       data: result.rows,
     });
   } catch (error) {
