@@ -11,9 +11,9 @@ const hasBooking = () => {
 
       if (path === "users") {
         console.log("user condition hit");
-        const id = req.params.userID;
+        const id = req.params.userId;
+        console.log(id);
 
-        // 💡 CORRECTION: Use COUNT(*) to get the number of records
         const result = await pool.query(
           `SELECT COUNT(*) AS count FROM bookings WHERE customer_id = $1`,
           [id]
@@ -34,7 +34,7 @@ const hasBooking = () => {
       if (path === "vehicles") {
         console.log("vehicle condition hit");
 
-        const id = req.params.vehicleID;
+        const id = req.params.vehicleId;
 
         // 💡 CORRECTION: Use COUNT(*) to get the number of records
         const result = await pool.query(

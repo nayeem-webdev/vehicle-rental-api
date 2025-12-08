@@ -54,7 +54,6 @@ const deleteUser = async (req: Request, res: Response) => {
         .status(400)
         .json({ success: false, message: "Missing userId parameter" });
     }
-
     const result = await userServices.deleteUserFromDB(userId);
     if (result.rowCount === 0) {
       return res

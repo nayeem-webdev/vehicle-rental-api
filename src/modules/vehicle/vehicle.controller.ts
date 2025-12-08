@@ -41,7 +41,6 @@ const deleteVehicle = async (req: Request, res: Response) => {
         .status(400)
         .json({ success: false, message: "Missing vehicleID parameter" });
     }
-
     const result = await vehicleServices.deleteVehicleFromDB(vehicleID);
     if (result.rowCount === 0) {
       return res
