@@ -109,7 +109,9 @@ const getAllBookingFromDB = async (role: string, id: number) => {
       json_build_object('vehicle_name', v.vehicle_name, 'registration_number', v.registration_number, 'type', v.type) AS vehicle
       FROM bookings b 
       LEFT JOIN vehicles v ON b.vehicle_id = v.id
-      ORDER BY b.id`
+      WHERE b.customer_id = $1
+      ORDER BY b.id`,
+    [id]
   );
   return result;
 };
