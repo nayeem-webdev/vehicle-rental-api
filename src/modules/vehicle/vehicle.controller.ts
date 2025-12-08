@@ -52,10 +52,10 @@ const deleteVehicle = async (req: Request, res: Response) => {
       success: true,
       message: "Vehicle deleted successfully",
     });
-  } catch (error) {
+  } catch (error: any) {
     res
       .status(500)
-      .json({ success: false, message: "Internal Server Error", error: error });
+      .json({ success: false, message: error.message, error: error });
   }
 };
 

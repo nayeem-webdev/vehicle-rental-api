@@ -36,14 +36,60 @@ const getAllBookings = async (req: Request, res: Response) => {
       message: customMessage,
       data: result.rows,
     });
-  } catch (error) {
+  } catch (error: any) {
     res
       .status(500)
-      .json({ success: false, message: "Internal Server Error", error: error });
+      .json({ success: false, message: error.message, error: error });
+  }
+};
+
+const updateBooking = async (req: Request, res: Response) => {
+  const token = req.headers.authorization?.split(" ")[1];
+  if (!token) {
+    return res
+      .status(401)
+      .json({ success: false, message: "Unauthorized Access" });
+  }
+  const decoded = jwt.verify(token, config.jwt.secret) as JwtPayload;
+  const { role, id: customerId } = decoded;
+  const isUnauthorized =
+    (role === "customer" && req.body.status === "returned") ||
+    (role === "admin" && req.body.status === "cancelled");
+
+  if (isUnauthorized) {
+    const message =
+      role === "customer"
+        ? "Unauthorized Access: Only admin can return bookings"
+        : "Unauthorized Access: Only customer can cancel bookings";
+
+    return res.status(401).json({ success: false, message });
+  }
+  const customMessage =
+    role === "admin"
+      ? "Booking marked as returned. Vehicle is now available"
+      : "Booking cancelled successfully";
+  const bookingId = Number(req.params.bookingId);
+  try {
+    const result = await bookingServices.updateBookingInDB(
+      role,
+      bookingId,
+      req.body,
+      customerId
+    );
+    return res.status(200).json({
+      success: true,
+      message: customMessage,
+      data: role === "customer" ? result.rows[0] : result,
+    });
+  } catch (error: any) {
+    res
+      .status(500)
+      .json({ success: false, message: error.message, error: error });
   }
 };
 
 export const bookingController = {
   createBooking,
   getAllBookings,
+  updateBooking,
 };

@@ -1,4 +1,3 @@
-import { pool } from "./../../database/db";
 import { Request, Response } from "express";
 import { userServices } from "./user.service";
 
@@ -11,10 +10,10 @@ const getAllUsers = async (req: Request, res: Response) => {
       message: "Users retrieved successfully",
       data: result.rows,
     });
-  } catch (error) {
+  } catch (error: any) {
     res
       .status(500)
-      .json({ success: false, message: "Internal Server Error", error: error });
+      .json({ success: false, message: error.message, error: error });
   }
 };
 
@@ -65,10 +64,10 @@ const deleteUser = async (req: Request, res: Response) => {
       success: true,
       message: "User deleted successfully",
     });
-  } catch (error) {
+  } catch (error: any) {
     res
       .status(500)
-      .json({ success: false, message: "Internal Server Error", error: error });
+      .json({ success: false, message: error.message, error: error });
   }
 };
 

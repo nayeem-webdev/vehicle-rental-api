@@ -113,7 +113,77 @@ const getAllBookingFromDB = async (role: string, id: number) => {
   );
   return result;
 };
+
+const updateBookingInDB = async (
+  role: string,
+  bookingId: number,
+  payload: Record<string, unknown>,
+  customerId: number
+) => {
+  const { status } = payload;
+  if (role === "customer") {
+    try {
+      const updateBooking = await pool.query(
+        `SELECT * FROM bookings WHERE id=$1 FOR UPDATE`,
+        [bookingId]
+      );
+      if (!updateBooking.rows[0]) {
+        throw new Error(`Booking with id ${bookingId}: not found`);
+      }
+      if (updateBooking.rows[0].customer_id !== customerId) {
+        throw new Error(
+          `Unauthorized: You are not allowed to change other user's booking`
+        );
+      }
+      const result = await pool.query(
+        `
+        UPDATE bookings SET status = $1 WHERE id = $2
+    RETURNING *`,
+        [status, bookingId]
+      );
+      await pool.query(
+        `
+      UPDATE vehicles SET availability_status = $1 WHERE id = $2`,
+        ["available", result.rows[0].vehicle_id]
+      );
+      return result;
+    } catch (error: any) {
+      await pool.query("ROLLBACK");
+      throw new Error(error.message);
+    }
+  }
+  try {
+    const updateBooking = await pool.query(
+      `SELECT * FROM bookings WHERE id=$1 FOR UPDATE`,
+      [bookingId]
+    );
+    if (!updateBooking.rows[0]) {
+      throw new Error(`Booking with id ${bookingId}: not found`);
+    }
+    const result = await pool.query(
+      `
+        UPDATE bookings SET status = $1 WHERE id = $2
+    RETURNING *`,
+      [status, bookingId]
+    );
+    await pool.query(
+      `
+      UPDATE vehicles SET availability_status = $1 WHERE id = $2`,
+      ["available", result.rows[0].vehicle_id]
+    );
+    const adminResult = {
+      ...result.rows[0],
+      vehicle: { availability_status: "available" },
+    };
+    return adminResult;
+  } catch (error: any) {
+    await pool.query("ROLLBACK");
+    throw new Error(error.message);
+  }
+};
+
 export const bookingServices = {
   createBookingIntoDB,
   getAllBookingFromDB,
+  updateBookingInDB,
 };
